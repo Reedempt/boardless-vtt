@@ -18,10 +18,14 @@ import org.jetbrains.compose.resources.painterResource
 
 import boardlessvtt.shared.generated.resources.Res
 import boardlessvtt.shared.generated.resources.compose_multiplatform
+import org.boardlessvtt.app.security.PasswordCrypto
 
 @Composable
 @Preview
 fun App() {
+    LaunchedEffect(Unit) {
+        PasswordCrypto.initialize()
+    }
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(

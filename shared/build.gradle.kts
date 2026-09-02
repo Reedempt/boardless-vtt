@@ -56,6 +56,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines)
+            implementation(libs.libsodiumCrypto)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
