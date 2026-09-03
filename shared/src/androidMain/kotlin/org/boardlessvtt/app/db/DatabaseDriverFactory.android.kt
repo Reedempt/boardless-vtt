@@ -9,4 +9,7 @@ actual class DatabaseDriverFactory(private val context: Context) {
     actual fun createAuthDriver(): SqlDriver {
         return AndroidSqliteDriver(AuthDatabase.Schema, context, "auth.db")
     }
+    actual fun createCoreDriver(): SqlDriver {
+        return AndroidSqliteDriver(BoardlessDatabase.Schema, context, "boardless.db")
+    }
 }

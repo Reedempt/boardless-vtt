@@ -10,14 +10,19 @@ actual class DatabaseDriverFactory {
         val dbDir = File(System.getProperty("user.home"), ".boardlessvtt")
         if (!dbDir.exists()) dbDir.mkdirs()
         val dbFile = File(dbDir, "auth.db")
-        val isNewDatabase = !dbFile.exists()
-
+        val isNew = !dbFile.exists()
         val driver = JdbcSqliteDriver("jdbc:sqlite:${dbFile.absolutePath}")
+        if (isNew) AuthDatabase.Schema.create(driver)
+        return driver
+    }
 
-        if (isNewDatabase) {
-            AuthDatabase.Schema.create(driver)
-        }
-
+    actual fun createCoreDriver(): SqlDriver {
+        val dbDir = File(System.getProperty("user.home"), ".boardlessvtt")
+        if (!dbDir.exists()) dbDir.mkdirs()
+        val dbFile = File(dbDir, "boardless.db")
+        val isNew = !dbFile.exists()
+        val driver = JdbcSqliteDriver("jdbc:sqlite:${dbFile.absolutePath}")
+        if (isNew) BoardlessDatabase.Schema.create(driver)
         return driver
     }
 }

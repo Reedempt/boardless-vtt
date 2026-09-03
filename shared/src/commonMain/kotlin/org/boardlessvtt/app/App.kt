@@ -8,6 +8,9 @@ import org.boardlessvtt.app.db.createAuthDatabase
 import org.boardlessvtt.app.ui.LoginScreen
 import org.boardlessvtt.app.security.PasswordCrypto
 import org.boardlessvtt.app.auth.AuthRepository
+import org.boardlessvtt.app.campaign.CampaignRepository
+import org.boardlessvtt.app.ui.CampaignListScreen
+import org.boardlessvtt.app.db.createBoardlessDatabase
 
 @Composable
 fun App(driverFactory: DatabaseDriverFactory) {
@@ -25,7 +28,13 @@ fun App(driverFactory: DatabaseDriverFactory) {
                 onLoginSuccess = { userId -> loggedInUserId = userId }
             )
         } else {
-            Text("Benvenuto! User ID: $loggedInUserId")
+            val campaignRepository = remember {
+                CampaignRepository(createBoardlessDatabase(driverFactory))
+            }
+            CampaignListScreen(
+                campaignRepository = campaignRepository,
+                currentUserId = loggedInUserId!!
+            )
         }
         /* var showContent by remember { mutableStateOf(false) }
          Column(

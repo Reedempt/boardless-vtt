@@ -16,3 +16,6 @@ SELECT * FROM player_campaigns WHERE dm_user_id = ?;
 
 selectCampaignById:
 SELECT * FROM player_campaigns WHERE id = ?;
+
+deleteCampaign:
+DELETE FROM player_campaigns WHERE id = ?;
