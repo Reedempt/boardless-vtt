@@ -1,0 +1,41 @@
+CREATE TABLE player_characters (
+    id TEXT NOT NULL PRIMARY KEY,
+    campaign_id TEXT NOT NULL,
+    owner_user_id TEXT NOT NULL,            -- FK logica → AuthDatabase.User.id
+    race_id TEXT NOT NULL,                  -- FK logica → RulesPackDatabase.rules_races.id
+    class_id TEXT NOT NULL,                 -- FK logica → RulesPackDatabase.rules_classes.id
+    name TEXT NOT NULL,
+    level INTEGER NOT NULL DEFAULT 1,
+    hp_current INTEGER NOT NULL,
+    hp_max INTEGER NOT NULL,
+    str INTEGER NOT NULL,
+    dex INTEGER NOT NULL,
+    con INTEGER NOT NULL,
+    intelligence INTEGER NOT NULL,          -- 'int' è keyword riservata in molti contesti, evitiamola
+    wis INTEGER NOT NULL,
+    cha INTEGER NOT NULL,
+    is_custom_content INTEGER NOT NULL DEFAULT 0,
+    pending_dm_approval INTEGER NOT NULL DEFAULT 0,  -- per il flusso di approvazione modifiche
+    FOREIGN KEY (campaign_id) REFERENCES player_campaigns(id)
+);
+
+insertCharacter:
+INSERT INTO player_characters(id, campaign_id, owner_user_id, race_id, class_id, name, level, hp_current, hp_max, str, dex, con, intelligence, wis, cha, is_custom_content, pending_dm_approval)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+selectCharactersByOwner:
+SELECT * FROM player_characters WHERE owner_user_id = ?;
+
+selectCharactersByCampaign:
+SELECT * FROM player_characters WHERE campaign_id = ?;
+
+selectPendingApproval:
+SELECT * FROM player_characters WHERE campaign_id = ? AND pending_dm_approval = 1;
+
+updateCharacterStats:
+UPDATE player_characters
+SET hp_current = ?, str = ?, dex = ?, con = ?, intelligence = ?, wis = ?, cha = ?
+WHERE id = ?;
+
+approveCharacterChanges:
+UPDATE player_characters SET pending_dm_approval = 0 WHERE id = ?;

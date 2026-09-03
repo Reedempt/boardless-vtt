@@ -1,0 +1,15 @@
+CREATE TABLE rules_classes (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    hit_die INTEGER NOT NULL,               -- es. 8 per d8, 10 per d10
+    primary_ability_id TEXT NOT NULL,
+    description TEXT,
+    FOREIGN KEY (primary_ability_id) REFERENCES rules_abilities(id)
+);
+
+insertClass:
+INSERT INTO rules_classes(id, name, hit_die, primary_ability_id, description)
+VALUES (?, ?, ?, ?, ?);
+
+selectAllClasses:
+SELECT * FROM rules_classes;

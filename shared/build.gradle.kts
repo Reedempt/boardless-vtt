@@ -18,6 +18,10 @@ sqldelight {
             packageName.set("org.boardlessvtt.app.db.auth")
             srcDirs.setFrom("src/commonMain/sqldelight-auth")
         }
+        create("RulesPackDatabase") {
+            packageName.set("org.boardlessvtt.app.rulespack")
+            srcDirs.setFrom("src/commonMain/sqldelight-rulespack")
+        }
     }
 }
 kotlin {

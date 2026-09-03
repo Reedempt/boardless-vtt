@@ -1,0 +1,18 @@
+CREATE TABLE player_campaigns (
+    id TEXT NOT NULL PRIMARY KEY,
+    game_id TEXT NOT NULL,                  -- FK logica → master_games.id
+    dm_user_id TEXT NOT NULL,               -- FK logica → AuthDatabase.User.id
+    name TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    FOREIGN KEY (game_id) REFERENCES master_games(id)
+);
+
+insertCampaign:
+INSERT INTO player_campaigns(id, game_id, dm_user_id, name, created_at)
+VALUES (?, ?, ?, ?, ?);
+
+selectCampaignsByDm:
+SELECT * FROM player_campaigns WHERE dm_user_id = ?;
+
+selectCampaignById:
+SELECT * FROM player_campaigns WHERE id = ?;

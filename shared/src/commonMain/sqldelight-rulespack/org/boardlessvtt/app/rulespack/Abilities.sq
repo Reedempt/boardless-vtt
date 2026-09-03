@@ -1,0 +1,12 @@
+CREATE TABLE rules_abilities (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    abbreviation TEXT NOT NULL              -- 'STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'
+);
+
+insertAbility:
+INSERT INTO rules_abilities(id, name, abbreviation)
+VALUES (?, ?, ?);
+
+selectAllAbilities:
+SELECT * FROM rules_abilities;

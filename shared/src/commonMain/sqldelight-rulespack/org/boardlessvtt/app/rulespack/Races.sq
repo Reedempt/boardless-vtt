@@ -1,0 +1,30 @@
+CREATE TABLE rules_races (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    speed INTEGER NOT NULL,
+    size TEXT NOT NULL                      -- 'Small', 'Medium', ecc.
+);
+
+CREATE TABLE rules_race_ability_bonus (
+    race_id TEXT NOT NULL,
+    ability_id TEXT NOT NULL,
+    bonus_value INTEGER NOT NULL,
+    PRIMARY KEY (race_id, ability_id),
+    FOREIGN KEY (race_id) REFERENCES rules_races(id),
+    FOREIGN KEY (ability_id) REFERENCES rules_abilities(id)
+);
+
+insertRace:
+INSERT INTO rules_races(id, name, description, speed, size)
+VALUES (?, ?, ?, ?, ?);
+
+insertRaceAbilityBonus:
+INSERT INTO rules_race_ability_bonus(race_id, ability_id, bonus_value)
+VALUES (?, ?, ?);
+
+selectAllRaces:
+SELECT * FROM rules_races;
+
+selectAbilityBonusesForRace:
+SELECT * FROM rules_race_ability_bonus WHERE race_id = ?;
