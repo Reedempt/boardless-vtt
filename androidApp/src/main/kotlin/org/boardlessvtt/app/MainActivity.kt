@@ -6,14 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import org.boardlessvtt.app.db.DatabaseDriverFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
+        val driverFactory = DatabaseDriverFactory(applicationContext)
         setContent {
-            App()
+            App(driverFactory)
         }
     }
 }
@@ -21,5 +22,6 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App()
+    // Preview non può istanziare un vero Context/driver, la lasciamo senza chiamare App() con parametri reali
+    // (la sistemeremo se necessario quando la UI sarà più complessa)
 }
