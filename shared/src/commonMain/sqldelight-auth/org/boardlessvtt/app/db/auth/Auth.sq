@@ -1,0 +1,23 @@
+CREATE TABLE User (
+    id TEXT NOT NULL PRIMARY KEY,          -- UUID generato client-side
+    username TEXT NOT NULL UNIQUE,
+    passwordHash TEXT NOT NULL,             -- output di PasswordHash.str(), formato $argon2id$...
+    role TEXT NOT NULL,                     -- 'DM' o 'PLAYER'
+    createdAt INTEGER NOT NULL,             -- epoch millis
+    lastLoginAt INTEGER
+);
+
+CREATE UNIQUE INDEX idx_user_username ON User(username);
+
+insertUser:
+INSERT INTO User(id, username, passwordHash, role, createdAt, lastLoginAt)
+VALUES (?, ?, ?, ?, ?, ?);
+
+selectUserByUsername:
+SELECT * FROM User WHERE username = ?;
+
+updateLastLogin:
+UPDATE User SET lastLoginAt = ? WHERE id = ?;
+
+deleteUser:
+DELETE FROM User WHERE id = ?;

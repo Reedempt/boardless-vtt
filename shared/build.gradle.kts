@@ -12,6 +12,11 @@ sqldelight {
     databases {
         create("BoardlessDatabase") {
             packageName.set("org.boardlessvtt.app.db")
+            srcDirs.setFrom("src/commonMain/sqldelight")
+        }
+        create("AuthDatabase") {
+            packageName.set("org.boardlessvtt.app.db.auth")
+            srcDirs.setFrom("src/commonMain/sqldelight-auth")
         }
     }
 }
