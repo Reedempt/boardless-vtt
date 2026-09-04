@@ -1,0 +1,53 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    # Ogni lunedì alle 06:00 UTC, per intercettare vulnerabilità
+    # scoperte dopo l'ultima analisi anche senza nuovi push
+    - cron: '0 6 * * 1'
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    permissions:
+      # Necessario per pubblicare i risultati nella tab Security
+      security-events: write
+      # Necessario per il checkout del codice
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'java-kotlin' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # build-mode manual: necessario perché il modulo "shared"
+          # usa SQLDelight, che genera codice Kotlin da file .sq
+          # durante la build. build-mode "none" non lo intercetterebbe.
+          build-mode: manual
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
