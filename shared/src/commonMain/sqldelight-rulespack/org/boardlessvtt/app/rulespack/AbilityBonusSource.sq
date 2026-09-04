@@ -1,0 +1,15 @@
+CREATE TABLE rules_ability_bonus_source (
+    id TEXT NOT NULL PRIMARY KEY,
+    source_type TEXT NOT NULL,     -- 'background', 'race', 'class' a seconda del gioco
+    source_id TEXT NOT NULL,       -- id della riga in rules_backgrounds / rules_races / rules_classes
+    ability_id TEXT NOT NULL,
+    bonus_value INTEGER NOT NULL,
+    FOREIGN KEY (ability_id) REFERENCES rules_abilities(id)
+);
+
+insertAbilityBonusSource:
+INSERT INTO rules_ability_bonus_source(id, source_type, source_id, ability_id, bonus_value)
+VALUES (?, ?, ?, ?, ?);
+
+selectBonusesForSource:
+SELECT * FROM rules_ability_bonus_source WHERE source_type = ? AND source_id = ?;

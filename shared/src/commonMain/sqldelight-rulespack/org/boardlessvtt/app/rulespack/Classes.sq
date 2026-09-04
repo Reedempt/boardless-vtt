@@ -1,7 +1,7 @@
 CREATE TABLE rules_classes (
     id TEXT NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
-    hit_die INTEGER NOT NULL,               -- es. 8 per d8, 10 per d10
+    hit_die INTEGER NOT NULL,
     primary_ability_id TEXT NOT NULL,
     description TEXT,
     FOREIGN KEY (primary_ability_id) REFERENCES rules_abilities(id)
@@ -13,3 +13,18 @@ VALUES (?, ?, ?, ?, ?);
 
 selectAllClasses:
 SELECT * FROM rules_classes;
+
+insertSeedClasses:
+INSERT INTO rules_classes(id, name, hit_die, primary_ability_id, description) VALUES
+    ('class-barbarian', 'Barbarian', 12, 'str', 'Guerriero primordiale che canalizza la furia in combattimento.'),
+    ('class-bard', 'Bard', 8, 'cha', 'Incantatore versatile che ispira alleati tramite musica e magia.'),
+    ('class-cleric', 'Cleric', 8, 'wis', 'Tramite divino della volontà di una divinità.'),
+    ('class-druid', 'Druid', 8, 'wis', 'Guardiano della natura capace di assumere forme animali.'),
+    ('class-fighter', 'Fighter', 10, 'str', 'Maestro di armi e tattiche di combattimento.'),
+    ('class-monk', 'Monk', 8, 'dex', 'Artista marziale che incanala energia interiore.'),
+    ('class-paladin', 'Paladin', 10, 'str', 'Guerriero sacro legato da un giuramento solenne.'),
+    ('class-ranger', 'Ranger', 10, 'dex', 'Cacciatore esperto di terre selvagge e furtività.'),
+    ('class-rogue', 'Rogue', 8, 'dex', 'Specialista in furtività, inganno e colpi precisi.'),
+    ('class-sorcerer', 'Sorcerer', 6, 'cha', 'Incantatore che canalizza magia innata nel sangue.'),
+    ('class-warlock', 'Warlock', 8, 'cha', 'Incantatore legato da un patto con un''entità potente.'),
+    ('class-wizard', 'Wizard', 6, 'int', 'Studioso della magia arcana attraverso lo studio.');

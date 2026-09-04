@@ -3,28 +3,25 @@ CREATE TABLE rules_races (
     name TEXT NOT NULL,
     description TEXT,
     speed INTEGER NOT NULL,
-    size TEXT NOT NULL                      -- 'Small', 'Medium', ecc.
-);
-
-CREATE TABLE rules_race_ability_bonus (
-    race_id TEXT NOT NULL,
-    ability_id TEXT NOT NULL,
-    bonus_value INTEGER NOT NULL,
-    PRIMARY KEY (race_id, ability_id),
-    FOREIGN KEY (race_id) REFERENCES rules_races(id),
-    FOREIGN KEY (ability_id) REFERENCES rules_abilities(id)
+    size TEXT NOT NULL
 );
 
 insertRace:
 INSERT INTO rules_races(id, name, description, speed, size)
 VALUES (?, ?, ?, ?, ?);
 
-insertRaceAbilityBonus:
-INSERT INTO rules_race_ability_bonus(race_id, ability_id, bonus_value)
-VALUES (?, ?, ?);
-
 selectAllRaces:
 SELECT * FROM rules_races;
 
-selectAbilityBonusesForRace:
-SELECT * FROM rules_race_ability_bonus WHERE race_id = ?;
+insertSeedRaces:
+INSERT INTO rules_races(id, name, description, speed, size) VALUES
+    ('race-aasimar', 'Aasimar', 'Mortali con ascendenza celestiale, benedetti da doni divini.', 30, 'Medium'),
+    ('race-dragonborn', 'Dragonborn', 'Discendenti di draghi, fieri portatori di un''arma al soffio elementale.', 30, 'Medium'),
+    ('race-dwarf', 'Dwarf', 'Robusti e resistenti, con affinità per la pietra e la resistenza al veleno.', 30, 'Medium'),
+    ('race-elf', 'Elf', 'Agili e longevi, con scorci di magia feérica nel sangue.', 30, 'Medium'),
+    ('race-gnome', 'Gnome', 'Piccoli e curiosi, dotati di forte resistenza mentale alla magia.', 30, 'Small'),
+    ('race-goliath', 'Goliath', 'Discendenti di giganti, alti e straordinariamente resistenti.', 35, 'Medium'),
+    ('race-halfling', 'Halfling', 'Piccoli, fortunati e sorprendentemente furtivi.', 30, 'Small'),
+    ('race-human', 'Human', 'Versatili e diffusi in ogni angolo del mondo.', 30, 'Medium'),
+    ('race-orc', 'Orc', 'Resistenti e instancabili, con grande vigore fisico.', 30, 'Medium'),
+    ('race-tiefling', 'Tiefling', 'Portatori di un''eredità infernale, con doni magici innati.', 30, 'Medium');

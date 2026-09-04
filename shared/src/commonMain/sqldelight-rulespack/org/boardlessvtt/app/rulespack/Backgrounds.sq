@@ -1,0 +1,12 @@
+CREATE TABLE rules_backgrounds (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT
+);
+
+insertBackground:
+INSERT INTO rules_backgrounds(id, name, description)
+VALUES (?, ?, ?);
+
+selectAllBackgrounds:
+SELECT * FROM rules_backgrounds;
