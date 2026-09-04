@@ -1,39 +1,10 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-
 version: 2
-
 updates:
-  # Gradle: la root include tutti i moduli (androidApp, desktopApp, shared)
-  # tramite settings.gradle.kts, quindi basta una singola entry sulla root.
-  - package-ecosystem: "gradle"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "gradle"
-    groups:
-      # Raggruppa gli aggiornamenti minori/patch in un'unica PR per ridurre il rumore.
-      # Gli aggiornamenti major restano separati, così puoi valutarli singolarmente
-      # (es. cambi di API in Kotlin, AndroidX, SQLDelight).
-      minor-and-patch:
-        update-types:
-          - "minor"
-          - "patch"
-
-  # GitHub Actions: tiene aggiornate le action usate nei workflow
-  # (es. actions/checkout, github/codeql-action).
+  # GitHub Actions used in workflows (e.g. CodeQL, CI)
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
     labels:
       - "dependencies"
       - "github-actions"
