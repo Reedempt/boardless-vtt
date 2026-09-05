@@ -17,6 +17,7 @@ fun App(driverFactory: DatabaseDriverFactory) {
     LaunchedEffect(Unit) {
         PasswordCrypto.initialize()
     }
+
     val authRepository = remember {
         AuthRepository (createAuthDatabase(driverFactory))
     }

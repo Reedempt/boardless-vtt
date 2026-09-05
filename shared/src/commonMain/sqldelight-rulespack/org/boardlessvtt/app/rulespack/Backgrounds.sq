@@ -10,3 +10,22 @@ VALUES (?, ?, ?);
 
 selectAllBackgrounds:
 SELECT * FROM rules_backgrounds;
+
+insertSeedBackgrounds:
+INSERT INTO rules_backgrounds(id, name, description) VALUES
+    ('bg-acolyte', 'Acolyte', 'Servitore devoto in un luogo di culto, iniziato ai rituali della propria fede.'),
+    ('bg-artisan', 'Artisan', 'Cresciuto tra le botteghe, esperto nella creazione di manufatti.'),
+    ('bg-charlatan', 'Charlatan', 'Esperto nell''individuare bersagli e proporre affari poco onesti.'),
+    ('bg-criminal', 'Criminal', 'Cresciuto ai margini della legge, abile in furtività e inganno.'),
+    ('bg-entertainer', 'Entertainer', 'Intrattenitore che vive di spettacolo ed esibizioni.'),
+    ('bg-farmer', 'Farmer', 'Cresciuto lavorando la terra, forte e resistente.'),
+    ('bg-guard', 'Guard', 'Ex sorvegliante, abituato alla vigilanza e alla disciplina.'),
+    ('bg-guide', 'Guide', 'Esperto di terre selvagge, abile nell''orientamento e nella sopravvivenza.'),
+    ('bg-hermit', 'Hermit', 'Vissuto in isolamento, dedito alla contemplazione e alla guarigione.'),
+    ('bg-merchant', 'Merchant', 'Mercante esperto in commerci e trattative.'),
+    ('bg-noble', 'Noble', 'Cresciuto in una casata nobiliare, avvezzo a diplomazia e comando.'),
+    ('bg-sage', 'Sage', 'Studioso dedito alla ricerca e alla conoscenza arcana.'),
+    ('bg-sailor', 'Sailor', 'Marinaio esperto, temprato dalla vita in mare.'),
+    ('bg-scribe', 'Scribe', 'Esperto nella trascrizione e conservazione di testi.'),
+    ('bg-soldier', 'Soldier', 'Veterano di guerra, addestrato al combattimento organizzato.'),
+    ('bg-wayfarer', 'Wayfarer', 'Viandante esperto, abituato a cavarsela in ogni situazione.');

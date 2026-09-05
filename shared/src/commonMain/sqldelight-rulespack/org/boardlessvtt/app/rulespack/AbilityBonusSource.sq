@@ -1,15 +1,65 @@
 CREATE TABLE rules_ability_bonus_source (
     id TEXT NOT NULL PRIMARY KEY,
-    source_type TEXT NOT NULL,     -- 'background', 'race', 'class' a seconda del gioco
-    source_id TEXT NOT NULL,       -- id della riga in rules_backgrounds / rules_races / rules_classes
+    source_type TEXT NOT NULL,
+    source_id TEXT NOT NULL,
     ability_id TEXT NOT NULL,
-    bonus_value INTEGER NOT NULL,
     FOREIGN KEY (ability_id) REFERENCES rules_abilities(id)
 );
 
 insertAbilityBonusSource:
-INSERT INTO rules_ability_bonus_source(id, source_type, source_id, ability_id, bonus_value)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO rules_ability_bonus_source(id, source_type, source_id, ability_id)
+VALUES (?, ?, ?, ?);
 
 selectBonusesForSource:
 SELECT * FROM rules_ability_bonus_source WHERE source_type = ? AND source_id = ?;
+
+insertSeedBackgroundBonuses:
+INSERT INTO rules_ability_bonus_source(id, source_type, source_id, ability_id) VALUES
+    ('abs-acolyte-int', 'background', 'bg-acolyte', 'int'),
+    ('abs-acolyte-wis', 'background', 'bg-acolyte', 'wis'),
+    ('abs-acolyte-cha', 'background', 'bg-acolyte', 'cha'),
+    ('abs-artisan-str', 'background', 'bg-artisan', 'str'),
+    ('abs-artisan-dex', 'background', 'bg-artisan', 'dex'),
+    ('abs-artisan-int', 'background', 'bg-artisan', 'int'),
+    ('abs-charlatan-dex', 'background', 'bg-charlatan', 'dex'),
+    ('abs-charlatan-con', 'background', 'bg-charlatan', 'con'),
+    ('abs-charlatan-cha', 'background', 'bg-charlatan', 'cha'),
+    ('abs-criminal-dex', 'background', 'bg-criminal', 'dex'),
+    ('abs-criminal-con', 'background', 'bg-criminal', 'con'),
+    ('abs-criminal-int', 'background', 'bg-criminal', 'int'),
+    ('abs-entertainer-str', 'background', 'bg-entertainer', 'str'),
+    ('abs-entertainer-dex', 'background', 'bg-entertainer', 'dex'),
+    ('abs-entertainer-cha', 'background', 'bg-entertainer', 'cha'),
+    ('abs-farmer-str', 'background', 'bg-farmer', 'str'),
+    ('abs-farmer-con', 'background', 'bg-farmer', 'con'),
+    ('abs-farmer-wis', 'background', 'bg-farmer', 'wis'),
+    ('abs-guard-str', 'background', 'bg-guard', 'str'),
+    ('abs-guard-int', 'background', 'bg-guard', 'int'),
+    ('abs-guard-wis', 'background', 'bg-guard', 'wis'),
+    ('abs-guide-dex', 'background', 'bg-guide', 'dex'),
+    ('abs-guide-con', 'background', 'bg-guide', 'con'),
+    ('abs-guide-wis', 'background', 'bg-guide', 'wis'),
+    ('abs-hermit-con', 'background', 'bg-hermit', 'con'),
+    ('abs-hermit-wis', 'background', 'bg-hermit', 'wis'),
+    ('abs-hermit-cha', 'background', 'bg-hermit', 'cha'),
+    ('abs-merchant-con', 'background', 'bg-merchant', 'con'),
+    ('abs-merchant-int', 'background', 'bg-merchant', 'int'),
+    ('abs-merchant-cha', 'background', 'bg-merchant', 'cha'),
+    ('abs-noble-str', 'background', 'bg-noble', 'str'),
+    ('abs-noble-int', 'background', 'bg-noble', 'int'),
+    ('abs-noble-cha', 'background', 'bg-noble', 'cha'),
+    ('abs-sage-con', 'background', 'bg-sage', 'con'),
+    ('abs-sage-int', 'background', 'bg-sage', 'int'),
+    ('abs-sage-wis', 'background', 'bg-sage', 'wis'),
+    ('abs-sailor-str', 'background', 'bg-sailor', 'str'),
+    ('abs-sailor-dex', 'background', 'bg-sailor', 'dex'),
+    ('abs-sailor-wis', 'background', 'bg-sailor', 'wis'),
+    ('abs-scribe-dex', 'background', 'bg-scribe', 'dex'),
+    ('abs-scribe-int', 'background', 'bg-scribe', 'int'),
+    ('abs-scribe-wis', 'background', 'bg-scribe', 'wis'),
+    ('abs-soldier-str', 'background', 'bg-soldier', 'str'),
+    ('abs-soldier-dex', 'background', 'bg-soldier', 'dex'),
+    ('abs-soldier-con', 'background', 'bg-soldier', 'con'),
+    ('abs-wayfarer-dex', 'background', 'bg-wayfarer', 'dex'),
+    ('abs-wayfarer-wis', 'background', 'bg-wayfarer', 'wis'),
+    ('abs-wayfarer-cha', 'background', 'bg-wayfarer', 'cha');
