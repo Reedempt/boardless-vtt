@@ -1,0 +1,29 @@
+CREATE TABLE rules_point_buy_config (
+    id TEXT NOT NULL PRIMARY KEY,
+    base_score INTEGER NOT NULL,
+    max_points INTEGER NOT NULL,
+    score_cap INTEGER NOT NULL
+);
+
+CREATE TABLE rules_point_buy_cost (
+    score INTEGER NOT NULL PRIMARY KEY,
+    cumulative_cost INTEGER NOT NULL
+);
+
+insertPointBuyConfig:
+INSERT INTO rules_point_buy_config(id, base_score, max_points, score_cap)
+VALUES (?, ?, ?, ?);
+
+insertPointBuyCost:
+INSERT INTO rules_point_buy_cost(score, cumulative_cost)
+VALUES (?, ?);
+
+selectPointBuyConfig:
+SELECT * FROM rules_point_buy_config LIMIT 1;
+
+selectAllPointBuyCosts:
+SELECT * FROM rules_point_buy_cost ORDER BY score;
+
+insertSeedPointBuy:
+INSERT INTO rules_point_buy_config(id, base_score, max_points, score_cap) VALUES
+    ('pointbuy-dnd5e-2024', 8, 27, 15);

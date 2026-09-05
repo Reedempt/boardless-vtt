@@ -35,12 +35,15 @@ data class AbilityBonusChoice(
     val abilityId: String
 )
 
+data class PointBuyConfig(
+    val baseScore: Long,
+    val maxPoints: Long,
+    val scoreCap: Long
+)
+
 class RulesPackRepository(private val database: RulesPackDatabase) {
 
     fun ensureSeedData() {
-        // Ogni tabella controllata e popolata indipendentemente dalle altre.
-        // Ordine obbligato dove esistono foreign key: abilities prima di classes/ability_bonus_source.
-
         if (database.abilitiesQueries.selectAllAbilities().executeAsList().isEmpty()) {
             val abilities = listOf(
                 Triple("str", "Forza", "STR"),
@@ -67,15 +70,35 @@ class RulesPackRepository(private val database: RulesPackDatabase) {
             database.backgroundsQueries.insertSeedBackgrounds()
         }
 
-        // Controllo specifico su un source_id noto, dato che questa tabella
-        // potrà in futuro contenere righe di source_type diversi (es. 'race' per altri giochi)
         val existingBackgroundBonuses = database.abilityBonusSourceQueries
             .selectBonusesForSource("background", "bg-acolyte")
             .executeAsList()
         if (existingBackgroundBonuses.isEmpty()) {
             database.abilityBonusSourceQueries.insertSeedBackgroundBonuses()
         }
+
+        if (database.pointBuyQueries.selectPointBuyConfig().executeAsOneOrNull() == null) {
+            database.pointBuyQueries.insertSeedPointBuy()
+            val costs = listOf(
+                8L to 0L, 9L to 1L, 10L to 2L, 11L to 3L, 12L to 4L,
+                13L to 5L, 14L to 7L, 15L to 9L
+            )
+            costs.forEach { (score, cost) ->
+                database.pointBuyQueries.insertPointBuyCost(score, cost)
+            }
+        }
     }
+
+    fun getPointBuyConfig(): PointBuyConfig? {
+        val row = database.pointBuyQueries.selectPointBuyConfig().executeAsOneOrNull()
+        return row?.let {
+            PointBuyConfig(baseScore = it.base_score, maxPoints = it.max_points, scoreCap = it.score_cap)
+        }
+    }
+
+    fun getPointBuyCosts(): Map<Int, Int> =
+        database.pointBuyQueries.selectAllPointBuyCosts().executeAsList()
+            .associate { it.score.toInt() to it.cumulative_cost.toInt() }
 
     fun getAllRaces(): List<RaceInfo> =
         database.racesQueries.selectAllRaces().executeAsList().map {

@@ -1,0 +1,15 @@
+CREATE TABLE rules_forbidden_combo (
+    id TEXT NOT NULL PRIMARY KEY,
+    description TEXT NOT NULL,
+    element_type_1 TEXT NOT NULL,
+    element_id_1 TEXT NOT NULL,
+    element_type_2 TEXT NOT NULL,
+    element_id_2 TEXT NOT NULL
+);
+
+insertForbiddenCombo:
+INSERT INTO rules_forbidden_combo(id, description, element_type_1, element_id_1, element_type_2, element_id_2)
+VALUES (?, ?, ?, ?, ?, ?);
+
+selectAllForbiddenCombos:
+SELECT * FROM rules_forbidden_combo;

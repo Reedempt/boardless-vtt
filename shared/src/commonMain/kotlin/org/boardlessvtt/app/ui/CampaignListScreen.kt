@@ -13,11 +13,13 @@ import androidx.compose.ui.unit.dp
 import org.boardlessvtt.app.campaign.CampaignRepository
 import org.boardlessvtt.app.campaign.CampaignInfo
 import org.boardlessvtt.app.campaign.GameInfo
+import androidx.compose.foundation.clickable
 
 @Composable
 fun CampaignListScreen(
     campaignRepository: CampaignRepository,
-    currentUserId: String
+    currentUserId: String,
+    onCampaignSelected: (campaignId: String, gameId: String) -> Unit
 ) {
     var campaigns by remember { mutableStateOf<List<CampaignInfo>>(emptyList()) }
     var games by remember { mutableStateOf<List<GameInfo>>(emptyList()) }
@@ -47,7 +49,10 @@ fun CampaignListScreen(
                 items(campaigns) { campaign ->
                     Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
                         Row(
-                            modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .fillMaxWidth()
+                                .clickable { onCampaignSelected(campaign.id, campaign.gameId) },
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -75,8 +80,8 @@ fun CampaignListScreen(
             games.forEach { game ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = selectedGameId == game.id,
-                        onClick = { selectedGameId = game.id }
+                        selected = selectedGameId == game.code,
+                        onClick = { selectedGameId = game.code }
                     )
                     Text(game.name)
                 }
