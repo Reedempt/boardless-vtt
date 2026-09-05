@@ -14,6 +14,7 @@ import org.boardlessvtt.app.campaign.CampaignRepository
 import org.boardlessvtt.app.campaign.CampaignInfo
 import org.boardlessvtt.app.campaign.GameInfo
 import androidx.compose.foundation.clickable
+import org.boardlessvtt.app.ui.DropdownSelector
 
 @Composable
 fun CampaignListScreen(
@@ -76,17 +77,16 @@ fun CampaignListScreen(
                 singleLine = true
             )
             Spacer(Modifier.height(8.dp))
-            Text("Scegli gioco:")
-            games.forEach { game ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = selectedGameId == game.code,
-                        onClick = { selectedGameId = game.code }
-                    )
-                    Text(game.name)
-                }
-            }
+
+            DropdownSelector(
+                label = "Scegli gioco",
+                options = games,
+                selectedOption = games.find { it.code == selectedGameId },
+                optionLabel = { it.name },
+                onOptionSelected = { selectedGameId = it.code }
+            )
             Spacer(Modifier.height(8.dp))
+
             Button(onClick = {
                 val gameId = selectedGameId
                 if (newCampaignName.isNotBlank() && gameId != null) {

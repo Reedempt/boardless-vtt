@@ -14,6 +14,7 @@ import org.boardlessvtt.app.security.PasswordCrypto
 import org.boardlessvtt.app.ui.CampaignListScreen
 import org.boardlessvtt.app.ui.CharacterCreationScreen
 import org.boardlessvtt.app.ui.LoginScreen
+import org.boardlessvtt.app.ui.DropdownSelector
 
 @Composable
 fun App(driverFactory: DatabaseDriverFactory) {

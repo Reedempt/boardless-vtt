@@ -63,31 +63,31 @@ fun CharacterCreationScreen(
         )
         Spacer(Modifier.height(16.dp))
 
-        Text("Specie", style = MaterialTheme.typography.titleMedium)
-        races.forEach { race ->
-            Row {
-                RadioButton(selected = selectedRace?.id == race.id, onClick = { selectedRace = race })
-                Text(race.name, modifier = Modifier.padding(top = 12.dp))
-            }
-        }
+        DropdownSelector(
+            label = "Specie",
+            options = races,
+            selectedOption = selectedRace,
+            optionLabel = { it.name },
+            onOptionSelected = { selectedRace = it }
+        )
         Spacer(Modifier.height(16.dp))
 
-        Text("Classe", style = MaterialTheme.typography.titleMedium)
-        classes.forEach { cls ->
-            Row {
-                RadioButton(selected = selectedClass?.id == cls.id, onClick = { selectedClass = cls })
-                Text("${cls.name} (d${cls.hitDie})", modifier = Modifier.padding(top = 12.dp))
-            }
-        }
+        DropdownSelector(
+            label = "Classe",
+            options = classes,
+            selectedOption = selectedClass,
+            optionLabel = { "${it.name} (d${it.hitDie})" },
+            onOptionSelected = { selectedClass = it }
+        )
         Spacer(Modifier.height(16.dp))
 
-        Text("Background", style = MaterialTheme.typography.titleMedium)
-        backgrounds.forEach { bg ->
-            Row {
-                RadioButton(selected = selectedBackground?.id == bg.id, onClick = { selectedBackground = bg })
-                Text(bg.name, modifier = Modifier.padding(top = 12.dp))
-            }
-        }
+        DropdownSelector(
+            label = "Background",
+            options = backgrounds,
+            selectedOption = selectedBackground,
+            optionLabel = { it.name },
+            onOptionSelected = { selectedBackground = it }
+        )
         Spacer(Modifier.height(16.dp))
 
         if (!isDm) {
