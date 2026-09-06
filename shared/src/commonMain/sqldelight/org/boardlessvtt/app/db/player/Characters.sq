@@ -83,3 +83,9 @@ VALUES (?, ?, ?, ?);
 
 selectAbilityChoicesForCharacter:
 SELECT * FROM player_character_ability_choices WHERE character_id = ?;
+
+selectCharacterById:
+SELECT * FROM player_characters WHERE id = ?;
+
+updatePlayerCharacterHp:
+UPDATE player_characters SET hp_current = ?, pending_dm_approval = 1 WHERE id = ?;

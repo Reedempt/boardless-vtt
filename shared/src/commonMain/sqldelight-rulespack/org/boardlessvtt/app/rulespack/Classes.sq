@@ -28,3 +28,6 @@ INSERT INTO rules_classes(id, name, hit_die, primary_ability_id, description) VA
     ('class-sorcerer', 'Sorcerer', 6, 'cha', 'Incantatore che canalizza magia innata nel sangue.'),
     ('class-warlock', 'Warlock', 8, 'cha', 'Incantatore legato da un patto con un''entità potente.'),
     ('class-wizard', 'Wizard', 6, 'int', 'Studioso della magia arcana attraverso lo studio.');
+
+    selectClassById:
+    SELECT * FROM rules_classes WHERE id = ?;

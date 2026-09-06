@@ -25,3 +25,6 @@ INSERT INTO rules_races(id, name, description, speed, size) VALUES
     ('race-human', 'Human', 'Versatili e diffusi in ogni angolo del mondo.', 30, 'Medium'),
     ('race-orc', 'Orc', 'Resistenti e instancabili, con grande vigore fisico.', 30, 'Medium'),
     ('race-tiefling', 'Tiefling', 'Portatori di un''eredità infernale, con doni magici innati.', 30, 'Medium');
+
+    selectRaceById:
+    SELECT * FROM rules_races WHERE id = ?;

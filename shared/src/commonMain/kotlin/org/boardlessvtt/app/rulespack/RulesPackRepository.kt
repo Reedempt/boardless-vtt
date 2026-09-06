@@ -149,4 +149,35 @@ class RulesPackRepository(private val database: RulesPackDatabase) {
                 abilityId = it.ability_id
             )
         }
+
+    fun getRaceById(id: String): RaceInfo? =
+        database.racesQueries.selectRaceById(id).executeAsOneOrNull()?.let {
+            RaceInfo(
+                id = it.id,
+                name = it.name,
+                description = it.description,
+                speed = it.speed,
+                size = it.size
+            )
+        }
+
+    fun getClassById(id: String): ClassInfo? =
+        database.classesQueries.selectClassById(id).executeAsOneOrNull()?.let {
+            ClassInfo(
+                id = it.id,
+                name = it.name,
+                hitDie = it.hit_die,
+                primaryAbilityId = it.primary_ability_id,
+                description = it.description
+            )
+        }
+
+    fun getBackgroundById(id: String): BackgroundInfo? =
+        database.backgroundsQueries.selectBackgroundById(id).executeAsOneOrNull()?.let {
+            BackgroundInfo(
+                id = it.id,
+                name = it.name,
+                description = it.description
+            )
+        }
 }

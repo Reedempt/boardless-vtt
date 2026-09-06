@@ -29,3 +29,6 @@ INSERT INTO rules_backgrounds(id, name, description) VALUES
     ('bg-scribe', 'Scribe', 'Esperto nella trascrizione e conservazione di testi.'),
     ('bg-soldier', 'Soldier', 'Veterano di guerra, addestrato al combattimento organizzato.'),
     ('bg-wayfarer', 'Wayfarer', 'Viandante esperto, abituato a cavarsela in ogni situazione.');
+
+    selectBackgroundById:
+    SELECT * FROM rules_backgrounds WHERE id = ?;
