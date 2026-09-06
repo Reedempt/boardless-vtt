@@ -26,56 +26,62 @@ sqldelight {
 }
 kotlin {
     jvm()
-    
+
     android {
-       namespace = "org.boardlessvtt.app.shared"
-       compileSdk = libs.versions.android.compileSdk.get().toInt()
-       minSdk = libs.versions.android.minSdk.get().toInt()
-    
-       compilerOptions {
-           jvmTarget = JvmTarget.JVM_11
-       }
-       androidResources {
-           enable = true
-       }
-       withHostTest {
-           isIncludeAndroidResources = true
-       }
-       withDeviceTestBuilder {
-           sourceSetTreeName = "test"
-       }.configure {
-           instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-       }
+        namespace = "org.boardlessvtt.app.shared"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
+        androidResources {
+            enable = true
+        }
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }.configure {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        }
+
     }
-    
-    sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.compose.uiTooling)
-            implementation(libs.sqldelight.android.driver)
-        }
-        commonMain.dependencies {
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
-            implementation(libs.compose.ui)
-            implementation(libs.compose.components.resources)
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.sqldelight.runtime)
-            implementation(libs.sqldelight.coroutines)
-            implementation(libs.libsodiumCrypto)
-            implementation(libs.compose.materialIconsExtended)
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-        jvmMain.dependencies {
-            implementation(libs.sqldelight.sqlite.driver)
+
+    sourceSets.all {
+        languageSettings {
+            optIn("kotlin.ExperimentalUnsignedTypes")
         }
     }
-}
+        sourceSets {
+            androidMain.dependencies {
+                implementation(libs.compose.uiToolingPreview)
+                implementation(libs.compose.uiTooling)
+                implementation(libs.sqldelight.android.driver)
+            }
+            commonMain.dependencies {
+                implementation(libs.compose.runtime)
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material3)
+                implementation(libs.compose.ui)
+                implementation(libs.compose.components.resources)
+                implementation(libs.compose.uiToolingPreview)
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+                implementation(libs.sqldelight.runtime)
+                implementation(libs.sqldelight.coroutines)
+                implementation(libs.libsodiumCrypto)
+                implementation(libs.compose.materialIconsExtended)
+            }
+            commonTest.dependencies {
+                implementation(libs.kotlin.test)
+            }
+            jvmMain.dependencies {
+                implementation(libs.sqldelight.sqlite.driver)
+            }
+        }
+    }
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
