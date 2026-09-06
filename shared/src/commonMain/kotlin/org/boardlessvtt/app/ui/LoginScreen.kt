@@ -11,10 +11,11 @@ import org.boardlessvtt.app.auth.AuthRepository
 @Composable
 fun LoginScreen(
     authRepository: AuthRepository,
-    onLoginSuccess: (userId: String) -> Unit
+    onLoginSuccess: (userId: String, role: String) -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var dmActivationCode by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var isRegisterMode by remember { mutableStateOf(false) }
 
@@ -41,7 +42,21 @@ fun LoginScreen(
             singleLine = true,
             visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
+
+        if (isRegisterMode) {
+            OutlinedTextField(
+                value = dmActivationCode,
+                onValueChange = { dmActivationCode = it },
+                label = { Text("Codice attivazione DM (opzionale)") },
+                singleLine = true
+            )
+            Text(
+                "Lascia vuoto per registrarti come Player",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(Modifier.height(8.dp))
+        }
 
         errorMessage?.let {
             Text(it, color = MaterialTheme.colorScheme.error)
@@ -55,12 +70,16 @@ fun LoginScreen(
                 return@Button
             }
             if (isRegisterMode) {
-                authRepository.register(username, password, role = "PLAYER")
-                    .onSuccess { errorMessage = "Registrazione completata, effettua il login" ; isRegisterMode = false }
+                authRepository.register(username, password, dmActivationCode.ifBlank { null })
+                    .onSuccess {
+                        errorMessage = "Registrazione completata, effettua il login"
+                        isRegisterMode = false
+                        dmActivationCode = ""
+                    }
                     .onFailure { errorMessage = it.message }
             } else {
                 authRepository.login(username, password)
-                    .onSuccess { userId -> onLoginSuccess(userId) }
+                    .onSuccess { result -> onLoginSuccess(result.userId, result.role) }
                     .onFailure { errorMessage = it.message }
             }
         }) {
@@ -68,7 +87,7 @@ fun LoginScreen(
         }
         Spacer(Modifier.height(8.dp))
 
-        TextButton(onClick = { isRegisterMode = !isRegisterMode; errorMessage = null }) {
+        TextButton(onClick = { isRegisterMode = !isRegisterMode; errorMessage = null; dmActivationCode = "" }) {
             Text(if (isRegisterMode) "Hai già un account? Accedi" else "Non hai un account? Registrati")
         }
     }

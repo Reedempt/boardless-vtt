@@ -27,6 +27,7 @@ fun App(driverFactory: DatabaseDriverFactory) {
     }
 
     var loggedInUserId by remember { mutableStateOf<String?>(null) }
+    var loggedInRole by remember { mutableStateOf<String?>(null) }
     var selectedCampaign by remember { mutableStateOf<Pair<String, String>?>(null) } // campaignId, gameId
 
     MaterialTheme {
@@ -34,7 +35,10 @@ fun App(driverFactory: DatabaseDriverFactory) {
         if (userId == null) {
             LoginScreen(
                 authRepository = authRepository,
-                onLoginSuccess = { id -> loggedInUserId = id }
+                onLoginSuccess = { id, role ->
+                    loggedInUserId = id
+                    loggedInRole = role
+                }
             )
         } else if (selectedCampaign == null) {
             val campaignRepository = remember {
@@ -43,7 +47,8 @@ fun App(driverFactory: DatabaseDriverFactory) {
             CampaignListScreen(
                 campaignRepository = campaignRepository,
                 currentUserId = userId,
-                onCampaignSelected = { campaignId, gameId -> selectedCampaign = campaignId to gameId }
+                onCampaignSelected = { campaignId, gameId -> selectedCampaign = campaignId to gameId },
+                onLogout = { loggedInUserId = null; loggedInRole = null }
             )
         } else {
             val (campaignId, gameId) = selectedCampaign!!
@@ -57,7 +62,7 @@ fun App(driverFactory: DatabaseDriverFactory) {
             CharacterCreationScreen(
                 campaignId = campaignId,
                 currentUserId = userId,
-                isDm = true, // per ora sempre DM, dato che solo il DM crea campagne in questo flusso
+                isDm = loggedInRole == "DM",
                 characterRepository = characterRepository,
                 rulesPackRepository = rulesPackRepository,
                 onCharacterCreated = { selectedCampaign = null } // torna alla lista campagne dopo la creazione

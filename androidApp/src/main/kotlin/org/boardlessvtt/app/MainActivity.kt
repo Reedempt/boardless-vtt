@@ -7,11 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import org.boardlessvtt.app.db.DatabaseDriverFactory
+import org.boardlessvtt.app.util.AndroidAppCloserHolder
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        AndroidAppCloserHolder.activityRef = java.lang.ref.WeakReference(this)
         val driverFactory = DatabaseDriverFactory(applicationContext)
         setContent {
             App(driverFactory)

@@ -15,12 +15,15 @@ import org.boardlessvtt.app.campaign.CampaignInfo
 import org.boardlessvtt.app.campaign.GameInfo
 import androidx.compose.foundation.clickable
 import org.boardlessvtt.app.ui.DropdownSelector
+import org.boardlessvtt.app.util.closeApplication
+import org.boardlessvtt.app.isDesktopPlatform
 
 @Composable
 fun CampaignListScreen(
     campaignRepository: CampaignRepository,
     currentUserId: String,
-    onCampaignSelected: (campaignId: String, gameId: String) -> Unit
+    onCampaignSelected: (campaignId: String, gameId: String) -> Unit,
+    onLogout: () -> Unit
 ) {
     var campaigns by remember { mutableStateOf<List<CampaignInfo>>(emptyList()) }
     var games by remember { mutableStateOf<List<GameInfo>>(emptyList()) }
@@ -40,6 +43,21 @@ fun CampaignListScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            if (isDesktopPlatform()) {
+                TextButton(onClick = { closeApplication() }) {
+                    Text("Chiudi App")
+                }
+            } else {
+                Spacer(Modifier.width(1.dp)) // mantiene l'allineamento del Logout a destra
+            }
+            TextButton(onClick = onLogout) {
+                Text("Logout")
+            }
+        }
         Text("Le mie campagne", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))
 

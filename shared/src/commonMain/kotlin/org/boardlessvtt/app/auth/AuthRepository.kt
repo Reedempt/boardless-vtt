@@ -7,11 +7,22 @@ import org.boardlessvtt.app.util.currentTimeMillis
 
 class AuthRepository(private val database: AuthDatabase) {
 
-    fun register(username: String, password: String, role: String): Result<Unit> {
+    fun register(username: String, password: String, dmActivationCode: String?): Result<Unit> {
         val existing = database.authQueries.selectUserByUsername(username).executeAsOneOrNull()
         if (existing != null) {
             return Result.failure(IllegalStateException("Username già esistente"))
         }
+
+        val role = if (!dmActivationCode.isNullOrBlank()) {
+            val payload = org.boardlessvtt.app.security.DmCodeVerifier.verify(dmActivationCode)
+            if (payload == null) {
+                return Result.failure(IllegalStateException("Codice attivazione DM non valido"))
+            }
+            "DM"
+        } else {
+            "PLAYER"
+        }
+
         val hash = PasswordCrypto.hashPassword(password)
         database.authQueries.insertUser(
             id = IdGenerator.newId(),
@@ -24,7 +35,9 @@ class AuthRepository(private val database: AuthDatabase) {
         return Result.success(Unit)
     }
 
-    fun login(username: String, password: String): Result<String> {
+    data class LoginResult(val userId: String, val role: String)
+
+    fun login(username: String, password: String): Result<LoginResult> {
         val user = database.authQueries.selectUserByUsername(username).executeAsOneOrNull()
             ?: return Result.failure(IllegalStateException("Utente non trovato"))
 
@@ -33,6 +46,6 @@ class AuthRepository(private val database: AuthDatabase) {
             return Result.failure(IllegalStateException("Password errata"))
         }
         database.authQueries.updateLastLogin(currentTimeMillis(), user.id)
-        return Result.success(user.id)
+        return Result.success(LoginResult(userId = user.id, role = user.role))
     }
 }
