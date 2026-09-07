@@ -188,3 +188,11 @@ class CharacterRepository(private val database: BoardlessDatabase) {
         database.charactersQueries.deleteCharacter(characterId)
     }
 }
+
+fun CharacterInfo.toNetworkCharacter() = org.boardlessvtt.app.network.NetworkCharacter(
+    id = id, campaignId = campaignId, ownerUserId = ownerUserId,
+    raceId = raceId, backgroundId = backgroundId, name = name, level = level,
+    hpCurrent = hpCurrent, hpMax = hpMax,
+    str = str, dex = dex, con = con, intelligence = intelligence, wis = wis, cha = cha,
+    pendingDmApproval = pendingDmApproval
+)

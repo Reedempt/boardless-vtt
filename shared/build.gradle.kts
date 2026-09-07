@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 sqldelight {
@@ -63,6 +64,7 @@ kotlin {
                 implementation(libs.ktor.server.core)
                 implementation(libs.ktor.server.cio)
                 implementation(libs.ktor.server.contentNegotiation)
+                implementation(libs.ktor.server.websockets)
             }
             commonMain.dependencies {
                 implementation(libs.compose.runtime)
@@ -80,6 +82,8 @@ kotlin {
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.contentNegotiation)
                 implementation(libs.ktor.serialization.json)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.websockets)
             }
             commonTest.dependencies {
                 implementation(libs.kotlin.test)
@@ -90,6 +94,7 @@ kotlin {
                 implementation(libs.ktor.server.core)
                 implementation(libs.ktor.server.cio)
                 implementation(libs.ktor.server.contentNegotiation)
+                implementation(libs.ktor.server.websockets)
             }
         }
     }
