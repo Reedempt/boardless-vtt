@@ -1,7 +1,19 @@
 package org.boardlessvtt.app
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Button
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.boardlessvtt.app.auth.AuthRepository
 import org.boardlessvtt.app.campaign.CampaignRepository
 import org.boardlessvtt.app.character.CharacterRepository
@@ -9,14 +21,15 @@ import org.boardlessvtt.app.db.DatabaseDriverFactory
 import org.boardlessvtt.app.db.createAuthDatabase
 import org.boardlessvtt.app.db.createBoardlessDatabase
 import org.boardlessvtt.app.db.createRulesPackDatabase
+import org.boardlessvtt.app.network.CampaignClient
+import org.boardlessvtt.app.network.CampaignServer
 import org.boardlessvtt.app.rulespack.RulesPackRepository
 import org.boardlessvtt.app.security.PasswordCrypto
 import org.boardlessvtt.app.ui.CampaignListScreen
 import org.boardlessvtt.app.ui.CharacterCreationScreen
-import org.boardlessvtt.app.ui.LoginScreen
-import org.boardlessvtt.app.ui.DropdownSelector
-import org.boardlessvtt.app.ui.CharacterListScreen
 import org.boardlessvtt.app.ui.CharacterDetailScreen
+import org.boardlessvtt.app.ui.CharacterListScreen
+import org.boardlessvtt.app.ui.LoginScreen
 
 @Composable
 fun App(driverFactory: DatabaseDriverFactory) {
@@ -48,12 +61,25 @@ fun App(driverFactory: DatabaseDriverFactory) {
             val campaignRepository = remember {
                 CampaignRepository(createBoardlessDatabase(driverFactory))
             }
-            CampaignListScreen(
-                campaignRepository = campaignRepository,
-                currentUserId = userId,
-                onCampaignSelected = { campaignId, gameId -> selectedCampaign = campaignId to gameId },
-                onLogout = { loggedInUserId = null; loggedInRole = null }
-            )
+
+            Column(modifier = Modifier.fillMaxSize()) {
+                // BLOCCO DI TEST TEMPORANEO — networking
+                val coroutineScope = rememberCoroutineScope()
+                val server = remember { CampaignServer() }
+                val client = remember { CampaignClient() }
+                var serverStatus by remember { mutableStateOf("Server non avviato") }
+                var pingTargetIp by remember { mutableStateOf("") }
+                var pingResult by remember { mutableStateOf("") }
+
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                    CampaignListScreen(
+                        campaignRepository = campaignRepository,
+                        currentUserId = userId,
+                        onCampaignSelected = { campaignId, gameId -> selectedCampaign = campaignId to gameId },
+                        onLogout = { loggedInUserId = null; loggedInRole = null }
+                    )
+                }
+            }
         } else {
             val (campaignId, gameId) = selectedCampaign!!
             val characterRepository = remember {

@@ -59,6 +59,10 @@ kotlin {
                 implementation(libs.compose.uiToolingPreview)
                 implementation(libs.compose.uiTooling)
                 implementation(libs.sqldelight.android.driver)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.server.core)
+                implementation(libs.ktor.server.cio)
+                implementation(libs.ktor.server.contentNegotiation)
             }
             commonMain.dependencies {
                 implementation(libs.compose.runtime)
@@ -73,12 +77,19 @@ kotlin {
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.libsodiumCrypto)
                 implementation(libs.compose.materialIconsExtended)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.contentNegotiation)
+                implementation(libs.ktor.serialization.json)
             }
             commonTest.dependencies {
                 implementation(libs.kotlin.test)
             }
             jvmMain.dependencies {
                 implementation(libs.sqldelight.sqlite.driver)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.server.core)
+                implementation(libs.ktor.server.cio)
+                implementation(libs.ktor.server.contentNegotiation)
             }
         }
     }
