@@ -181,4 +181,10 @@ class CharacterRepository(private val database: BoardlessDatabase) {
 
     fun getPendingMulticlassRequests(): List<CharacterClassInfo> =
         database.charactersQueries.selectPendingMulticlassRequests().executeAsList().map { mapClass(it) }
+
+    fun deleteCharacter(characterId: String) {
+        database.charactersQueries.deleteCharacterAbilityChoices(characterId)
+        database.charactersQueries.deleteCharacterClasses(characterId)
+        database.charactersQueries.deleteCharacter(characterId)
+    }
 }

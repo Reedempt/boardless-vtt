@@ -15,6 +15,8 @@ import org.boardlessvtt.app.ui.CampaignListScreen
 import org.boardlessvtt.app.ui.CharacterCreationScreen
 import org.boardlessvtt.app.ui.LoginScreen
 import org.boardlessvtt.app.ui.DropdownSelector
+import org.boardlessvtt.app.ui.CharacterListScreen
+import org.boardlessvtt.app.ui.CharacterDetailScreen
 
 @Composable
 fun App(driverFactory: DatabaseDriverFactory) {
@@ -29,6 +31,8 @@ fun App(driverFactory: DatabaseDriverFactory) {
     var loggedInUserId by remember { mutableStateOf<String?>(null) }
     var loggedInRole by remember { mutableStateOf<String?>(null) }
     var selectedCampaign by remember { mutableStateOf<Pair<String, String>?>(null) } // campaignId, gameId
+    var selectedCharacterId by remember { mutableStateOf<String?>(null) }
+    var showCharacterCreation by remember { mutableStateOf(false) }
 
     MaterialTheme {
         val userId = loggedInUserId
@@ -59,14 +63,35 @@ fun App(driverFactory: DatabaseDriverFactory) {
                 val db = createRulesPackDatabase(driverFactory, gameId)
                 RulesPackRepository(db).also { it.ensureSeedData() }
             }
-            CharacterCreationScreen(
-                campaignId = campaignId,
-                currentUserId = userId,
-                isDm = loggedInRole == "DM",
-                characterRepository = characterRepository,
-                rulesPackRepository = rulesPackRepository,
-                onCharacterCreated = { selectedCampaign = null } // torna alla lista campagne dopo la creazione
-            )
+
+            val charId = selectedCharacterId
+            if (charId != null) {
+                CharacterDetailScreen(
+                    characterId = charId,
+                    isDm = loggedInRole == "DM",
+                    characterRepository = characterRepository,
+                    rulesPackRepository = rulesPackRepository,
+                    onBack = { selectedCharacterId = null }
+                )
+            } else if (showCharacterCreation) {
+                CharacterCreationScreen(
+                    campaignId = campaignId,
+                    currentUserId = userId,
+                    isDm = loggedInRole == "DM",
+                    characterRepository = characterRepository,
+                    rulesPackRepository = rulesPackRepository,
+                    onCharacterCreated = { showCharacterCreation = false },
+                    onCancel = { showCharacterCreation = false }
+                )
+            } else {
+                CharacterListScreen(
+                    campaignId = campaignId,
+                    characterRepository = characterRepository,
+                    onCharacterSelected = { id -> selectedCharacterId = id },
+                    onCreateNewCharacter = { showCharacterCreation = true },
+                    onBack = { selectedCampaign = null }
+                )
+            }
         }
     }
 }

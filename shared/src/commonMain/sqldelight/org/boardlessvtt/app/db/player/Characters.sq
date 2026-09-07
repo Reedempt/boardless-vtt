@@ -89,3 +89,12 @@ SELECT * FROM player_characters WHERE id = ?;
 
 updatePlayerCharacterHp:
 UPDATE player_characters SET hp_current = ?, pending_dm_approval = 1 WHERE id = ?;
+
+deleteCharacter:
+DELETE FROM player_characters WHERE id = ?;
+
+deleteCharacterClasses:
+DELETE FROM player_character_classes WHERE character_id = ?;
+
+deleteCharacterAbilityChoices:
+DELETE FROM player_character_ability_choices WHERE character_id = ?;

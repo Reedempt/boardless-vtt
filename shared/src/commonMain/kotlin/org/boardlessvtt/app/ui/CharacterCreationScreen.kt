@@ -18,7 +18,8 @@ fun CharacterCreationScreen(
     isDm: Boolean,
     characterRepository: CharacterRepository,
     rulesPackRepository: RulesPackRepository,
-    onCharacterCreated: () -> Unit
+    onCharacterCreated: () -> Unit,
+    onCancel: () -> Unit
 ) {
     val races = remember { rulesPackRepository.getAllRaces() }
     val classes = remember { rulesPackRepository.getAllClasses() }
@@ -47,10 +48,34 @@ fun CharacterCreationScreen(
     val maxPoints = pointBuyConfig?.maxPoints?.toInt() ?: 27
     val remainingPoints = maxPoints - spentPoints
     val backgroundPointsUsed = backgroundBonuses.values.sum()
+    var showCancelConfirmDialog by remember { mutableStateOf(false) }
+
+    fun resetForm() {
+        name = ""
+        selectedRace = null
+        selectedClass = null
+        selectedBackground = null
+        scores = mapOf("str" to baseScore, "dex" to baseScore, "con" to baseScore, "int" to baseScore, "wis" to baseScore, "cha" to baseScore)
+        backgroundBonuses = emptyMap()
+        errorMessage = null
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(onClick = { showCancelConfirmDialog = true }) {
+                Text("Annulla")
+            }
+            TextButton(onClick = { resetForm() }) {
+                Text("Reset")
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+
         Text("Nuovo Personaggio", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))
 
@@ -188,6 +213,26 @@ fun CharacterCreationScreen(
         }) {
             Text("Crea Personaggio")
         }
+    }
+    if (showCancelConfirmDialog) {
+        AlertDialog(
+            onDismissRequest = { showCancelConfirmDialog = false },
+            title = { Text("Annullare la creazione?") },
+            text = { Text("Tutte le scelte fatte finora andranno perse.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showCancelConfirmDialog = false
+                    onCancel()
+                }) {
+                    Text("Annulla creazione", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCancelConfirmDialog = false }) {
+                    Text("Continua a modificare")
+                }
+            }
+        )
     }
 }
 
