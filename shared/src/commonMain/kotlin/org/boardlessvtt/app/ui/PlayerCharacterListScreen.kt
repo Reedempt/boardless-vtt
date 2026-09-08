@@ -16,7 +16,8 @@ import org.boardlessvtt.app.network.ServerMessage
 fun PlayerCharacterListScreen(
     campaignId: String,
     client: CampaignClient,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCreateNewCharacter: () -> Unit
 ) {
     var characters by remember { mutableStateOf<List<NetworkCharacter>>(emptyList()) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -74,8 +75,9 @@ fun PlayerCharacterListScreen(
         }
 
         Spacer(Modifier.height(8.dp))
-        Button(onClick = { refresh() }) {
-            Text("Aggiorna")
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = { refresh() }) { Text("Aggiorna") }
+            Button(onClick = onCreateNewCharacter) { Text("+ Nuovo Personaggio") }
         }
     }
 }

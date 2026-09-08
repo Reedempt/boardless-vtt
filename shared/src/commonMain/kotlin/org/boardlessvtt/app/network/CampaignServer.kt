@@ -26,7 +26,7 @@ class CampaignServer(
     val connectedPlayers = MutableStateFlow<Set<String>>(emptySet())
 
     fun start() {
-        server = embeddedServer(CIO, port = port) {
+        server = createPlatformServer(port) {
             install(WebSockets) {
                 pingPeriod = 15.seconds
                 timeout = 30.seconds
@@ -57,7 +57,7 @@ class CampaignServer(
                     ServerMessage.JoinRejected(message.requestId, "Codice campagna non valido")
                 } else {
                     connectedPlayers.value = connectedPlayers.value + message.userId
-                    ServerMessage.JoinAccepted(message.requestId, campaign.id)
+                    ServerMessage.JoinAccepted(message.requestId, campaign.id, campaign.game_id)
                 }
             }
             is ClientMessage.GetCharacters -> {

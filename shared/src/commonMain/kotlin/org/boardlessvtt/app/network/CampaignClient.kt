@@ -1,7 +1,6 @@
 package org.boardlessvtt.app.network
 
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.CompletableDeferred
@@ -12,7 +11,7 @@ import org.boardlessvtt.app.util.IdGenerator
 
 class CampaignClient(private val scope: CoroutineScope) {
 
-    private val client = HttpClient(CIO) { install(WebSockets) }
+    private val client = createPlatformHttpClient()
     private val json = Json { ignoreUnknownKeys = true }
     private var session: DefaultClientWebSocketSession? = null
 
@@ -52,13 +51,30 @@ class CampaignClient(private val scope: CoroutineScope) {
     suspend fun getCharacters(campaignId: String): ServerMessage =
         sendAndAwait(ClientMessage.GetCharacters(IdGenerator.newId(), campaignId))
 
-    suspend fun createCharacter(msg: ClientMessage.CreateCharacter): ServerMessage =
-        sendAndAwait(msg.copy(requestId = IdGenerator.newId()))
+    suspend fun createCharacter(
+        campaignId: String,
+        ownerUserId: String,
+        raceId: String,
+        classId: String,
+        backgroundId: String,
+        name: String,
+        str: Int, dex: Int, con: Int, intelligence: Int, wis: Int, cha: Int,
+        backgroundAbilityChoices: Map<String, Int>,
+        hitDie: Int
+    ): ServerMessage = sendAndAwait(
+        ClientMessage.CreateCharacter(
+            requestId = IdGenerator.newId(),
+            campaignId = campaignId, ownerUserId = ownerUserId,
+            raceId = raceId, classId = classId, backgroundId = backgroundId, name = name,
+            str = str, dex = dex, con = con, intelligence = intelligence, wis = wis, cha = cha,
+            backgroundAbilityChoices = backgroundAbilityChoices, hitDie = hitDie
+        )
+    )
 
     suspend fun updateHp(characterId: String, newHp: Int): ServerMessage =
         sendAndAwait(ClientMessage.UpdateHp(IdGenerator.newId(), characterId, newHp))
 
-    fun close() {
+    suspend fun close() {
         client.close()
     }
 }

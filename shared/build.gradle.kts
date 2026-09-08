@@ -61,10 +61,6 @@ kotlin {
                 implementation(libs.compose.uiTooling)
                 implementation(libs.sqldelight.android.driver)
                 implementation(libs.ktor.client.cio)
-                implementation(libs.ktor.server.core)
-                implementation(libs.ktor.server.cio)
-                implementation(libs.ktor.server.contentNegotiation)
-                implementation(libs.ktor.server.websockets)
             }
             commonMain.dependencies {
                 implementation(libs.compose.runtime)
@@ -83,6 +79,10 @@ kotlin {
                 implementation(libs.ktor.client.contentNegotiation)
                 implementation(libs.ktor.serialization.json)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.server.core)
+                implementation(libs.ktor.server.cio)
+                implementation(libs.ktor.server.contentNegotiation)
+                implementation(libs.ktor.server.websockets)
                 implementation(libs.ktor.client.websockets)
             }
             commonTest.dependencies {
@@ -91,10 +91,6 @@ kotlin {
             jvmMain.dependencies {
                 implementation(libs.sqldelight.sqlite.driver)
                 implementation(libs.ktor.client.cio)
-                implementation(libs.ktor.server.core)
-                implementation(libs.ktor.server.cio)
-                implementation(libs.ktor.server.contentNegotiation)
-                implementation(libs.ktor.server.websockets)
             }
         }
     }

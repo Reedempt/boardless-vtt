@@ -14,7 +14,7 @@ import org.boardlessvtt.app.network.ServerMessage
 fun PlayerConnectionScreen(
     currentUserId: String,
     client: CampaignClient,
-    onConnected: (campaignId: String) -> Unit,
+    onConnected: (campaignId: String, gameId: String) -> Unit,
     onLogout: () -> Unit
 ) {
     var hostIp by remember { mutableStateOf("") }
@@ -71,7 +71,7 @@ fun PlayerConnectionScreen(
                         client.connect(hostIp)
                         val response = client.joinCampaign(campaignId, currentUserId)
                         when (response) {
-                            is ServerMessage.JoinAccepted -> onConnected(response.campaignId) // ID reale, non il codice digitato
+                            is ServerMessage.JoinAccepted -> onConnected(response.campaignId, response.gameId)
                             is ServerMessage.JoinRejected -> errorMessage = response.reason
                             is ServerMessage.Error -> errorMessage = response.message
                             else -> errorMessage = "Risposta inattesa dal DM"

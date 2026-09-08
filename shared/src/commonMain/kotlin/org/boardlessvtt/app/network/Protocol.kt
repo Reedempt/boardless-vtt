@@ -7,8 +7,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class ClientMessage {
     abstract val requestId: String
+
     @Serializable
-    data class JoinCampaign(override val requestId: String, val joinCode: String, val userId: String) : ClientMessage()
+    data class JoinCampaign(
+        override val requestId: String,
+        val joinCode: String,
+        val userId: String
+    ) : ClientMessage()
 
     @Serializable
     data class GetCharacters(override val requestId: String, val campaignId: String) : ClientMessage()
@@ -39,7 +44,7 @@ sealed class ServerMessage {
     abstract val requestId: String?
 
     @Serializable
-    data class JoinAccepted(override val requestId: String?, val campaignId: String) : ServerMessage()
+    data class JoinAccepted(override val requestId: String?, val campaignId: String, val gameId: String) : ServerMessage()
 
     @Serializable
     data class JoinRejected(override val requestId: String?, val reason: String) : ServerMessage()
