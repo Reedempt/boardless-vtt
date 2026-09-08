@@ -75,7 +75,14 @@ fun CampaignListScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(campaign.name, style = MaterialTheme.typography.titleMedium)
+                            Column {
+                                Text(campaign.name, style = MaterialTheme.typography.titleMedium)
+                                Text(
+                                    "Codice: ${campaign.joinCode}",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                             IconButton(onClick = { campaignPendingDelete = campaign }) {
                                 Icon(Icons.Default.Delete, contentDescription = "Elimina campagna")
                             }

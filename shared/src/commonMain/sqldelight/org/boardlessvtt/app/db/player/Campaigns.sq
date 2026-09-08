@@ -1,21 +1,25 @@
 CREATE TABLE player_campaigns (
     id TEXT NOT NULL PRIMARY KEY,
-    game_id TEXT NOT NULL,                  -- FK logica → master_games.id
-    dm_user_id TEXT NOT NULL,               -- FK logica → AuthDatabase.User.id
+    join_code TEXT NOT NULL UNIQUE,
+    game_id TEXT NOT NULL,
+    dm_user_id TEXT NOT NULL,
     name TEXT NOT NULL,
     created_at INTEGER NOT NULL,
     FOREIGN KEY (game_id) REFERENCES master_games(id)
 );
 
 insertCampaign:
-INSERT INTO player_campaigns(id, game_id, dm_user_id, name, created_at)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO player_campaigns(id, join_code, game_id, dm_user_id, name, created_at)
+VALUES (?, ?, ?, ?, ?, ?);
 
 selectCampaignsByDm:
 SELECT * FROM player_campaigns WHERE dm_user_id = ?;
 
 selectCampaignById:
 SELECT * FROM player_campaigns WHERE id = ?;
+
+selectCampaignByJoinCode:
+SELECT * FROM player_campaigns WHERE join_code = ?;
 
 deleteCampaign:
 DELETE FROM player_campaigns WHERE id = ?;

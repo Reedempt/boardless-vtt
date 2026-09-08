@@ -13,9 +13,11 @@ import org.boardlessvtt.app.character.CharacterRepository
 import org.boardlessvtt.app.character.AbilityScores
 import org.boardlessvtt.app.character.toNetworkCharacter
 import kotlin.time.Duration.Companion.seconds
+import org.boardlessvtt.app.campaign.CampaignRepository
 
 class CampaignServer(
     private val characterRepository: CharacterRepository,
+    private val campaignRepository: CampaignRepository,
     private val port: Int = NetworkConfig.DEFAULT_PORT
 ) {
     private var server: EmbeddedServer<*, *>? = null
@@ -50,12 +52,17 @@ class CampaignServer(
     private suspend fun handleMessage(message: ClientMessage, session: DefaultWebSocketServerSession) {
         val response: ServerMessage = when (message) {
             is ClientMessage.JoinCampaign -> {
-                connectedPlayers.value = connectedPlayers.value + message.userId
-                ServerMessage.JoinAccepted(message.campaignId)
+                val campaign = campaignRepository.getCampaignByJoinCode(message.joinCode)
+                if (campaign == null) {
+                    ServerMessage.JoinRejected(message.requestId, "Codice campagna non valido")
+                } else {
+                    connectedPlayers.value = connectedPlayers.value + message.userId
+                    ServerMessage.JoinAccepted(message.requestId, campaign.id)
+                }
             }
             is ClientMessage.GetCharacters -> {
                 val characters = characterRepository.getCharactersForCampaign(message.campaignId)
-                ServerMessage.CharactersList(characters.map { it.toNetworkCharacter() })
+                ServerMessage.CharactersList(message.requestId, characters.map { it.toNetworkCharacter() })
             }
             is ClientMessage.CreateCharacter -> {
                 val scores = AbilityScores(
@@ -63,31 +70,20 @@ class CampaignServer(
                     intelligence = message.intelligence, wis = message.wis, cha = message.cha
                 )
                 val characterId = characterRepository.createCharacterWithPointBuy(
-                    campaignId = message.campaignId,
-                    ownerUserId = message.ownerUserId,
-                    raceId = message.raceId,
-                    primaryClassId = message.classId,
-                    backgroundId = message.backgroundId,
-                    name = message.name,
-                    baseScores = scores,
-                    backgroundAbilityChoices = message.backgroundAbilityChoices.toList(),
-                    hitDie = message.hitDie
+                    campaignId = message.campaignId, ownerUserId = message.ownerUserId,
+                    raceId = message.raceId, primaryClassId = message.classId, backgroundId = message.backgroundId,
+                    name = message.name, baseScores = scores,
+                    backgroundAbilityChoices = message.backgroundAbilityChoices.toList(), hitDie = message.hitDie
                 )
                 val created = characterRepository.getCharacterById(characterId)
-                if (created != null) {
-                    ServerMessage.CharacterCreated(created.toNetworkCharacter())
-                } else {
-                    ServerMessage.Error("Personaggio creato ma non recuperabile")
-                }
+                if (created != null) ServerMessage.CharacterUpdated(message.requestId, created.toNetworkCharacter())
+                else ServerMessage.Error(message.requestId, "Personaggio creato ma non recuperabile")
             }
             is ClientMessage.UpdateHp -> {
                 characterRepository.updatePlayerHp(message.characterId, message.newHp)
                 val updated = characterRepository.getCharacterById(message.characterId)
-                if (updated != null) {
-                    ServerMessage.CharacterCreated(updated.toNetworkCharacter()) // riuso il tipo, rappresenta "personaggio aggiornato"
-                } else {
-                    ServerMessage.Error("Personaggio non trovato dopo l'aggiornamento")
-                }
+                if (updated != null) ServerMessage.CharacterUpdated(message.requestId, updated.toNetworkCharacter())
+                else ServerMessage.Error(message.requestId, "Personaggio non trovato dopo l'aggiornamento")
             }
         }
         session.send(Frame.Text(json.encodeToString(ServerMessage.serializer(), response)))

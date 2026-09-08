@@ -30,6 +30,8 @@ import org.boardlessvtt.app.ui.CharacterListScreen
 import org.boardlessvtt.app.ui.LoginScreen
 import org.boardlessvtt.app.network.CampaignServer
 import org.boardlessvtt.app.network.CampaignClient
+import org.boardlessvtt.app.ui.PlayerConnectionScreen
+import org.boardlessvtt.app.ui.PlayerCharacterListScreen
 
 @Composable
 fun App(driverFactory: DatabaseDriverFactory) {
@@ -57,11 +59,36 @@ fun App(driverFactory: DatabaseDriverFactory) {
                     loggedInRole = role
                 }
             )
+        } else if (loggedInRole == "PLAYER") {
+            val coroutineScope = rememberCoroutineScope()
+            val client = remember { CampaignClient(coroutineScope) }
+            var connectedCampaignId by remember { mutableStateOf<String?>(null) }
+
+            val campId = connectedCampaignId
+            if (campId == null) {
+                PlayerConnectionScreen(
+                    currentUserId = userId,
+                    client = client,
+                    onConnected = { id -> connectedCampaignId = id },
+                    onLogout = { loggedInUserId = null; loggedInRole = null }
+                )
+            } else {
+                PlayerCharacterListScreen(
+                    campaignId = campId,
+                    client = client,
+                    onBack = { connectedCampaignId = null }
+                )
+            }
         } else if (selectedCampaign == null) {
             val campaignRepository = remember {
                 CampaignRepository(createBoardlessDatabase(driverFactory))
             }
-
+            val characterRepositoryForServer = remember { CharacterRepository(createBoardlessDatabase(driverFactory)) }
+            val campaignRepositoryForServer = remember { CampaignRepository(createBoardlessDatabase(driverFactory)) }
+            val campaignServer = remember { CampaignServer(characterRepositoryForServer, campaignRepositoryForServer) }
+            LaunchedEffect(Unit) {
+                campaignServer.start()
+            }
             CampaignListScreen(
                 campaignRepository = campaignRepository,
                 currentUserId = userId,
